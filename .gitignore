@@ -1,6 +1,5 @@
 /_archive
+/test_tifs
 /.venv
 /__pycache__
-/test_tifs
-
-
+/docs/images/large_images

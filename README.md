@@ -52,15 +52,15 @@
 
 In recent years deep learning has allowed for accurate cell detection in high quality AOSLO images of the retina. This has moved the bottleneck of the image analysis for the purpose of cone counting to the laborious task of manually cropping and scaling several sections of very large images. Slow responding of large photoshop documents can slow down the process even further.
 
-This project aims to drastically speed up this manual task by allowing the user to select an unlimited number of scaled crops with a simple double click. Maps-style zoom functionality allows easy navigation of large images, and several other features are available to user which greatly improve the process. The software can only operate on single layer image files, so some use of photoshop for layer selection beforehand is necessary.
+This project aims to drastically speed up this manual task by allowing the user to select an unlimited number of scaled crops with a simple double click. Maps-style zoom functionality allows easy navigation of large images, and several other features are available to users which greatly improve the process. The software can only operate on single layer image files, so some use of photoshop for layer selection beforehand is necessary.
 
 #### Features
 
 - Initial input of scaling factors will automatically scale all relevant measurements.
-- Retinal centre is placed with a double click and all coordinates are in relation to this point. A scaled scrosshair will show eccentric rings or tick marks.
+- Retinal centre is placed with a double click and all coordinates are in relation to this point. A scaled crosshair will show eccentric rings or tick marks.
 - An unlimited number of scaled square crop boxes can be placed, updated, and deleted.
-- A single image is used for crop placement, however images can be cropped after at the same locations from multiple modalities such as confocal and split inmages.
-- Outputs include; labelled crop tifs of the original image at the selected locations, The original image with selected crop locations shown (also in multiple modalities), and csv files containing metadata (coordinates in microns, degrees, etc.). 
+- A single image is used for crop placement, however images can be cropped after at the same locations from multiple modalities such as confocal and split-detection images.
+- Outputs include; labelled crop tifs of the original image at the selected locations, the original image with selected crop locations shown (also in multiple modalities), and csv files containing metadata (coordinates in microns, degrees, etc.). 
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

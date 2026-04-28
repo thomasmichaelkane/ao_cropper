@@ -1,19 +1,28 @@
-units:
-    axial_length: 24.0  # Default axial length in millimeters.
-    mpp: 0.6  # Default microns per pixel value.
-    crop_size: 55  # Default crop size in microns.
-    model_eye_length: 24.0  # Model eye length in millimeters.
-    reference_mpd: 291  # Reference value for microns per degree.
-    max_image_pixels: 1_000_000_000 # in case PIL cannot hold very large images increase this
-text:
-    underscores_in_id_count: 1  # Number of underscores within the ID number.
-    font_size: 48  # Default font size for text elements.
-crosshair:
-    colour: white  # Default colour for the crosshair.
-    length_pixels: 20_000  # Length of the crosshair in pixels.
-    mark_width: 15  # Width of the marks on the crosshair.
-crop_box:
-    colour: red  # Default colour for the crop box.
-    hover_colour: yellow  # Colour of the crop box when hovered over.
-    label_font_size: 48  # Font size for the crop box labels.
+# ┌─────────────────────────────────────────┐
+# │           ao_cropper config             │
+# └─────────────────────────────────────────┘
 
+# Patient/image-specific — override per run with -a/--axial-length and -m/--mpp
+acquisition:
+  axial_length: 24.0                  # mm  — patient-specific; affects all degree calculations
+  mpp: 0.6                            # µm  — microns per pixel from image acquisition metadata
+
+units:
+  crop_size: 55                       # µm  — size of each square crop region
+  model_eye_length: 24.0              # mm  — Drasdo & Fowler model eye reference length
+  reference_mpd: 291                  # µm/° — microns per degree for the model eye
+  max_image_pixels: 1_000_000_000     # raise PIL's safety cap for very large TIFFs
+
+text:
+  underscores_in_id_count: 1          # underscores inside the subject ID (e.g. MM_0364 → 1)
+  font_size: 48
+
+crosshair:
+  colour: white
+  length_pixels: 20_000               # full crosshair arm length in image pixels
+  mark_width: 15                      # half-width of each degree tick mark in pixels
+
+crop_box:
+  colour: red
+  hover_colour: yellow
+  label_font_size: 48

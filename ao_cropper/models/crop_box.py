@@ -25,17 +25,17 @@ class CropBox:
         get_ID: Returns the ID of the crop box.
         get_location_data: Returns the location data of the crop box.
     """
-    
+
     def __init__(self, ID, coordinates, top_left, scale, parameters, settings):
 
         self.ID = ID
         self.coordinates = coordinates
         self.top_left = top_left
         self.scale = scale
-        
+
         for k, v in parameters.items():
             setattr(self, k, v)
-        
+
         for k, v in settings.items():
             setattr(self, k, v)
 
@@ -68,28 +68,28 @@ class CropBox:
 
         if self.outline_pix < 1:
             self.outline_pix = 1
-        
+
         self.ID_string = "Crop #" + str(self.ID)
 
-        self.box = canvas.create_rectangle(self.x0_box, 
-                                           self.y0_box, 
-                                           self.x1_box, 
-                                           self.y1_box, 
-                                           fill="", 
-                                           outline=self.colour, 
-                                           width=self.outline_pix, 
-                                           tags=(self.ID_string, "removable", "box"), 
+        self.box = canvas.create_rectangle(self.x0_box,
+                                           self.y0_box,
+                                           self.x1_box,
+                                           self.y1_box,
+                                           fill="",
+                                           outline=self.colour,
+                                           width=self.outline_pix,
+                                           tags=(self.ID_string, "removable", "box"),
                                            activeoutline=self.hover_colour)
 
         # place number counter next to the box
         number_size = int(self.label_font_size/2)
-        
-        self.number = canvas.create_text(self.x_number, 
-                                         self.y_number, 
-                                         fill=self.colour, 
-                                         text=self.ID, 
-                                         font=("Purisa", number_size), 
-                                         tags=(self.ID_string, "removable", "number"), 
+
+        self.number = canvas.create_text(self.x_number,
+                                         self.y_number,
+                                         fill=self.colour,
+                                         text=self.ID,
+                                         font=("Purisa", number_size),
+                                         tags=(self.ID_string, "removable", "number"),
                                          activefill=self.hover_colour)
 
     def locate(self, foveal_centre):
@@ -102,20 +102,20 @@ class CropBox:
         self.y_degrees = self.y_relative / self.ppd
         self.distance_deg = self.distance_μm / self.ppd
 
-        # flip the x coordinate if eye is OS insteda of OD (used as default)
+        # flip the x coordinate if eye is OS instead of OD (used as default)
         if self.eye == Eye.OS:
             self.x_degrees = self.x_degrees * (-1)
 
         # ophthal coordinates
         if self.x_degrees >= 0:
-            self.x_meridian = "N" # nasal
+            self.x_meridian = "N"  # nasal
         elif self.x_degrees < 0:
-            self.x_meridian = "T" # temporal
+            self.x_meridian = "T"  # temporal
 
         if self.y_degrees >= 0:
-            self.y_meridian = "I" # inferior
+            self.y_meridian = "I"  # inferior
         elif self.y_degrees < 0:
-            self.y_meridian = "S" # superior
+            self.y_meridian = "S"  # superior
 
         self.x_absolute_deg = math.fabs(self.x_degrees)
         self.x_ophth = (self.x_absolute_deg, self.x_meridian)
@@ -133,10 +133,10 @@ class CropBox:
 
         # cut the box out of the image
         img = Image.open(modality_path)
-        tiff = img.crop((self.x0,self.y0,self.x1,self.y1))
+        tiff = img.crop((self.x0, self.y0, self.x1, self.y1))
 
         location_tuple = self.get_round_coordinates(1)
-        location_string = ("_".join(map(str, location_tuple))).replace(".","p")
+        location_string = ("_".join(map(str, location_tuple))).replace(".", "p")
 
         tiff_name = self.id_number + "_" + self.eye.name + "_" + location_string + "_" + str(self.crop_size_μm) + "μm_crop-" + str(self.ID) + "_" + modality + ".tif"
 

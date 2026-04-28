@@ -1,0 +1,13 @@
+[project]
+name = "ao-cropper"
+version = "0.1.0"
+description = "Interactive tool for cropping subsections from AOSLO retinal images with auto-scaling"
+requires-python = ">=3.13"
+dependencies = [
+    "pillow>=12.2.0",
+    "pyyaml>=6.0.3",
+    "rich>=15.0.0",
+]
+
+[project.scripts]
+ao-cropper = "ao_cropper.__main__:main"

@@ -3,23 +3,22 @@ from tkinter import ttk
 from tkinter import messagebox as msg
 from PIL import Image, ImageTk
 
-from lib.gui.auto_scrollbar import AutoScrollbar
-from lib.gui.control_panel import ControlPanel
-from lib.assets.crosshair import Crosshair
-from lib.assets.crop_box import CropBox
-from lib.utils.util_func import *
+from ao_cropper.gui.auto_scrollbar import AutoScrollbar
+from ao_cropper.gui.control_panel import ControlPanel
+from ao_cropper.models.crosshair import Crosshair
+from ao_cropper.models.crop_box import CropBox
 
 class Cropper(ttk.Frame):
     """
     A zoomable canvas for cropping sections from aoslo iamges efficiently. This is the mother
     class for the AutoScrollBar, ControlPanel, CropBoxes and Crosshairs.
 
-    This class extends ttk.Frame and provides a user interface for handling image cropping, 
-    zooming, and annotation. It allows a large image file to be loaded (the canvas) and 
+    This class extends ttk.Frame and provides a user interface for handling image cropping,
+    zooming, and annotation. It allows a large image file to be loaded (the canvas) and
     navigated and zoomed, and crop box markers to be placed anywhere on the image. An eye
     centre is also placed to automatically calculate the true distances of each crop from
     the foveal centre.
-    
+
     Attributes:
         master (tk.Tk): The parent widget.
         parameters (dict): User parameters.
@@ -53,12 +52,12 @@ class Cropper(ttk.Frame):
 
         ttk.Frame.__init__(self, master=master)
         self.master.title("AOSLO Cropper")
-        
+
         self.image_path = image_path
 
         for k, v in parameters.items():
             setattr(self, k, v)
-            
+
         self.parameters = parameters
         self.settings = settings
 
@@ -73,12 +72,12 @@ class Cropper(ttk.Frame):
                                 xscrollcommand=hbar.set, yscrollcommand=vbar.set)
         self.canvas.grid(row=0, column=0, sticky="nswe")
         self.canvas.update()  # wait till canvas is created
-        
+
         def _create_circle(self, x, y, r, **kwargs):
             return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
-        
+
         self.canvas.create_circle = _create_circle
-        
+
         vbar.configure(command=self.scroll_y)  # bind scrollbars to the canvas
         hbar.configure(command=self.scroll_x)
 
@@ -177,40 +176,40 @@ class Cropper(ttk.Frame):
 
         # Remove 1 pixel shift at the sides of the bbox1
         bbox1 = (bbox1[0] + 1, bbox1[1] + 1, bbox1[2] - 1, bbox1[3] - 1)
-        
+
         bbox2 = (self.canvas.canvasx(0),  # get visible area of the canvas
                  self.canvas.canvasy(0),
                  self.canvas.canvasx(self.canvas.winfo_width()),
                  self.canvas.canvasy(self.canvas.winfo_height()))
-        
+
         bbox = [min(bbox1[0], bbox2[0]), min(bbox1[1], bbox2[1]),  # get scroll region box
                 max(bbox1[2], bbox2[2]), max(bbox1[3], bbox2[3])]
-        
+
         if bbox[0] == bbox2[0] and bbox[2] == bbox2[2]:  # whole image in the visible area
             bbox[0] = bbox1[0]
             bbox[2] = bbox1[2]
-            
+
         if bbox[1] == bbox2[1] and bbox[3] == bbox2[3]:  # whole image in the visible area
             bbox[1] = bbox1[1]
             bbox[3] = bbox1[3]
-            
+
         self.canvas.configure(scrollregion=bbox)  # set scroll region
-        
+
         x1 = max(bbox2[0] - bbox1[0], 0)  # get coordinates (x1,y1,x2,y2) of the image tile
         y1 = max(bbox2[1] - bbox1[1], 0)
         x2 = min(bbox2[2], bbox1[2]) - bbox1[0]
         y2 = min(bbox2[3], bbox1[3]) - bbox1[1]
-        
+
         if int(x2 - x1) > 0 and int(y2 - y1) > 0:  # show image if it in the visible area
-            
+
             x = min(int(x2 / self.imscale), self.width)   # sometimes it is larger on 1 pixel...
             y = min(int(y2 / self.imscale), self.height)  # ...and sometimes not
-            
+
             image = self.image.crop((int(x1 / self.imscale), int(y1 / self.imscale), x, y))
             imagetk = ImageTk.PhotoImage(image.resize((int(x2 - x1), int(y2 - y1))))
             imageid = self.canvas.create_image(max(bbox2[0], bbox1[0]), max(bbox2[1], bbox1[1]),
                                                anchor="nw", image=imagetk)
-            
+
             self.canvas.lower(imageid)  # set image into background
             self.canvas.imagetk = imagetk  # keep an extra reference to prevent garbage-collection
             self.image_corners = bbox1
@@ -233,7 +232,7 @@ class Cropper(ttk.Frame):
 
         if self.show_rings is True:
             self.canvas.delete("markers")
-            
+
         elif self.show_rings is False:
             self.canvas.delete("rings")
 
@@ -281,7 +280,7 @@ class Cropper(ttk.Frame):
                                    parameters=self.parameters,
                                    settings=self.settings["crop_box"]))
 
-        # add crop to the cache and contorl panel list
+        # add crop to the cache and control panel list
         self.crop_IDs.append(self.crops[-1].get_ID())
         self.crops[-1].mark(self.canvas)
         self.crops[-1].locate(self.centre_abs)
@@ -361,5 +360,3 @@ class Cropper(ttk.Frame):
     def get_master(self):
 
         return self.master
-    
-

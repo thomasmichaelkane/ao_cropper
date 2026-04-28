@@ -2,8 +2,8 @@ class Crosshair:
     """
     A class using a crosshair representing the foveal centre.
 
-    This class is designed to handle the creation and manipulation of a crosshair used for 
-    referencing the foveal centre. It provides functionality for marking the crosshair on a 
+    This class is designed to handle the creation and manipulation of a crosshair used for
+    referencing the foveal centre. It provides functionality for marking the crosshair on a
     canvas, adding degree markers, and calculating related coordinates.
 
     Attributes:
@@ -23,16 +23,16 @@ class Crosshair:
         get_abs_location: Returns the absolute coordinates of the crosshair center.
         stamp: Stamps the crosshair onto the image.
     """
-    
+
     def __init__(self, coordinates, top_left, scale, parameters, settings):
 
         self.coordinates = coordinates
         self.top_left = top_left
         self.scale = scale
-        
+
         for k, v in parameters.items():
             setattr(self, k, v)
-            
+
         for k, v in settings.items():
             setattr(self, k, v)
 

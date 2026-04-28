@@ -47,7 +47,7 @@ class ControlPanel(ttk.Frame):
 
         for k, v in parameters.items():
             setattr(self, k, v)
-            
+
         self.settings = settings
 
         panes = ttk.PanedWindow(self.master)
@@ -106,11 +106,15 @@ class ControlPanel(ttk.Frame):
 
         # buttons to delete all crops, save and repeat, and save and quit
         self.delete_button = tk.Button(self.save_pane, text="Delete all", command=self.cropper.delete_all)
-        self.delete_button.grid(row=1, column=1, padx = 10, pady = 3)
+        self.delete_button.grid(row=1, column=1, padx=10, pady=3)
         self.save_button = tk.Button(self.save_pane, text="Save", command=self.save_close)
-        self.save_button.grid(row=1, column=2, padx = 10, pady = 3)
+        self.save_button.grid(row=1, column=2, padx=10, pady=3)
 
-        self.font = ImageFont.truetype("arial.ttf", self.settings["text"]["font_size"])
+        font_size = self.settings["text"]["font_size"]
+        try:
+            self.font = ImageFont.truetype("arial.ttf", font_size)
+        except OSError:
+            self.font = ImageFont.load_default(size=font_size)
 
     def replace_centre(self):
 
@@ -162,25 +166,25 @@ class ControlPanel(ttk.Frame):
 
     def create_results_folders(self):
 
-        # create main output folder
-        self.output_folder = self.folder + "//" + "ao_crops_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        locate = self.settings.get("locate", False)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        suffix = "_locate" if locate else ""
+
+        self.output_folder = self.folder + "//" + "ao_crops_" + timestamp + suffix
         os.makedirs(self.output_folder)
 
-        # folder to store the crop tifs
-        self.crops_folder = self.output_folder + "//Crops"
-        os.makedirs(self.crops_folder)
-
-        # folder to store the canvases displaying the crop locations
         self.canvas_folder = self.output_folder + "//Canvases"
         os.makedirs(self.canvas_folder)
 
-        # folders for each modality within the crops folder
-        self.crop_modality_folders = {}
+        if not locate:
+            self.crops_folder = self.output_folder + "//Crops"
+            os.makedirs(self.crops_folder)
 
-        for modality in self.modalities:
-            modality_folder = self.crops_folder + "//" + modality
-            os.makedirs(modality_folder)
-            self.crop_modality_folders[modality] = modality_folder
+            self.crop_modality_folders = {}
+            for modality in self.modalities:
+                modality_folder = self.crops_folder + "//" + modality
+                os.makedirs(modality_folder)
+                self.crop_modality_folders[modality] = modality_folder
 
     def create_locations_csv(self):
 
@@ -235,9 +239,14 @@ class ControlPanel(ttk.Frame):
         csvFile.close()
         print("LUT.csv saved")
 
-    def save(self) :
+    def save(self):
 
-        print("Saving crops as tiffs...")
+        locate = self.settings.get("locate", False)
+
+        if locate:
+            print("Locate mode: saving maps only...")
+        else:
+            print("Saving crops as tiffs...")
 
         self.create_results_folders()
 
@@ -245,15 +254,16 @@ class ControlPanel(ttk.Frame):
 
         self.create_locations_csv()
 
-        # create crops/canvases for every modality found in the original folder
         for modality in self.modalities:
 
             modality_path = self.folder + "/" + self.base_name + modality + ".tif"
             canvas_tiff, canvas_draw = self.create_canvas_tiff(modality_path)
-            self.create_crop_tiffs(modality, modality_path, canvas_draw)
+
+            if not locate:
+                self.create_crop_tiffs(modality, modality_path, canvas_draw)
 
             canvas_tiff_name = self.id_number + "_" + self.eye.name + "_crop_locations_" + modality + ".tif"
-            canvas_tiff.save(self.canvas_folder+ "//" + canvas_tiff_name)
+            canvas_tiff.save(self.canvas_folder + "//" + canvas_tiff_name)
             print(canvas_tiff_name + " saved")
 
         self.create_lut()
@@ -268,5 +278,3 @@ class ControlPanel(ttk.Frame):
     def close(self):
 
         self.cropper.master.destroy()
-
-

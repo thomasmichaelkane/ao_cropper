@@ -1,5 +1,6 @@
 /_archive
 /test_tifs
 /.venv
-/__pycache__
+**/__pycache__
 /docs/images/large_images
+/CLAUDE.md

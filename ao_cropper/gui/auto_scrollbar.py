@@ -4,8 +4,8 @@ from tkinter import ttk
 class AutoScrollbar(ttk.Scrollbar):
     """
     A subclass of ttk.Scrollbar that automatically hides itself when it's not needed.
-    
-    Only the grid geometry manager should be used with this widget. The pack and place 
+
+    Only the grid geometry manager should be used with this widget. The pack and place
     geometry managers are disabled and will raise a tk.TclError if used.
     """
 
@@ -18,7 +18,7 @@ class AutoScrollbar(ttk.Scrollbar):
             ttk.Scrollbar.set(self, lo, hi)
 
     def pack(self, **kw):
- 
+
         raise tk.TclError("Cannot use pack with this widget.")
 
     def place(self, **kw):

@@ -10,10 +10,9 @@
 
   <p align="center">
     Easily crop subsections from AOSLO images with auto-scaling
-    <br />
-    <a href="https://github.com/thomasmichaelkane/ao_cropper/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/thomasmichaelkane/ao_cropper/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <h1>
+      <a href="https://thomasmichaelkane.github.io/ac-guide/">Guide</a>
+    </h1>
   </p>
 </div>
 
@@ -68,7 +67,7 @@ Run `uv run ao-cropper --help` for full usage.
 
 ## Usage
 
-ao_cropper provides a two-window interface: a zoomable canvas for placing crops, and a control panel showing crop coordinates and save controls. Full usage instructions are available in the [documentation](#).
+ao_cropper provides a two-window interface: a zoomable canvas for placing crops, and a control panel showing crop coordinates and save controls. Full usage instructions are available in the [documentation](https://thomasmichaelkane.github.io/ac-guide/).
 
 ---
 
